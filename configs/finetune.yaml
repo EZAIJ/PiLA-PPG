@@ -1,0 +1,32 @@
+seed: 42
+
+data:
+  csv_path: "orin_ASR.csv"
+  label_as: "AS_Label"
+  label_ar: "AR_Label"
+  feature_start: 1
+  feature_end: 100
+
+split:
+  test_size: 0.2
+  val_size: 0.2
+
+model:
+  embedding_size: 64
+  reduction_ratio: 4
+  adapt_conv_out_channels: 256
+  dropout_rate_first: 0.09433983406473338
+  dropout_rate_subsequent: 0.017393057346893146
+  num_frozen_layers: 2
+  pretrained_checkpoint: "path/to/pretrained.pth"
+
+training:
+  batch_size: 128
+  num_epochs: 80
+  lr: 0.0035746285212812008
+  weight_decay: 0.00001379209212595301
+  loss_weight_as: 0.3980336746360639
+  patience: 20
+
+output:
+  dir: "final_results"

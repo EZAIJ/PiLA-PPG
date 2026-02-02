@@ -1,0 +1,27 @@
+seed: 42
+
+data:
+  csv_path: "all_4.csv"
+  label_column: "APP_Label"
+  feature_start: 1
+  feature_end: 100
+
+split:
+  test_size: 0.2
+  val_size: 0.2
+
+model:
+  num_classes: 4
+  feature_dim: 256
+
+training:
+  batch_size: 128
+  num_workers: 4
+  num_epochs: 50
+  lr: 0.001
+  weight_decay: 0.0
+  dropout_rate: 0.5
+  patience: 20
+
+output:
+  dir: "test/test_APP_6"
