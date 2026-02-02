@@ -1,21 +1,21 @@
 # PiLA: A PPG-Based Intelligent Framework for Cardiac Disease Diagnosis
 
-This repository provides the official implementation of **PiLA (Physiological-informed Learning Architecture)**, a deep learning framework for PPG-based intelligent cardiac disease diagnosis.
+This repository provides the official implementation of **PiLA (Physiological-informed Learning Architecture)**, an end-to-end deep learning framework for PPG-based cardiac disease diagnosis, designed in accordance with reproducibility and transparency standards commonly adopted in medical AI research.
 
-PiLA is an end-to-end framework designed for medical artificial intelligence research. It supports multimodal physiological signal modeling, pretrained weight transfer, and downstream multi-task diagnostic learning.
+PiLA supports multimodal physiological signal modeling, pretrained representation learning, and downstream multi-task diagnostic training, enabling systematic investigation of physiological-informed learning strategies for cardiovascular disease assessment.
 
 ---
 
 ## Framework Overview
 
-PiLA aims to fully exploit physiological information embedded in PPG and its derived signals (e.g., VPG and APG).  
-Through a unified deep learning architecture, PiLA enables:
+PiLA aims to fully exploit physiological information embedded in photoplethysmography (PPG) signals and their derived forms, including velocity PPG (VPG) and acceleration PPG (APG).  
+Through a unified and modular architecture, PiLA enables:
 
-- Representation learning from physiological signals  
-- Transfer and freezing of pretrained model weights  
+- Representation learning from multimodal physiological signals  
+- Transfer and selective freezing of pretrained model weights  
 - Downstream multi-task cardiac disease diagnosis (e.g., aortic stenosis and aortic regurgitation)
 
-The framework emphasizes reproducibility and engineering rigor for medical AI research.
+The framework emphasizes methodological clarity and engineering rigor to facilitate reproducible medical AI research.
 
 ---
 
@@ -33,6 +33,7 @@ The framework emphasizes reproducibility and engineering rigor for medical AI re
 │   └── finetune.yaml      # Configuration for downstream training
 ├── pretrain.py            # Entry point for pretraining
 ├── finetune.py            # Entry point for downstream diagnosis
+├── plot_distribution.py  # Script for label and data distribution visualization
 ├── requirements.txt
 └── README.md
 ```
@@ -41,15 +42,15 @@ The framework emphasizes reproducibility and engineering rigor for medical AI re
 
 ## Data Splitting Strategy
 
-For downstream tasks, the dataset is split using stratified sampling to preserve the joint distribution of disease labels across subsets.
+For downstream diagnostic tasks, the dataset is partitioned using stratified sampling to preserve the joint distribution of disease labels across all subsets.
 
-The dataset is divided as follows:
+Specifically, the dataset is split as follows:
 
 - Training set: 64%  
 - Validation set: 16%  
 - Test set: 20%
 
-Stratification is performed using the joint (AS, AR) label pairs.
+Stratification is performed based on the joint label pairs of aortic stenosis (AS) and aortic regurgitation (AR), ensuring consistent class composition across training, validation, and test sets.
 
 ---
 
@@ -57,47 +58,21 @@ Stratification is performed using the joint (AS, AR) label pairs.
 
 ### 1. Pretraining Stage
 
-The pretraining stage is first conducted to learn general physiological representations.
+The pretraining stage is conducted to learn general physiological representations from multimodal signals without task-specific supervision.
 
+```bash
+python pretrain.py --config configs/pretrain.yaml
 ```
-.
-├── src/
-│   ├── data.py            # Data loading and dataset definitions
-│   ├── models.py          # Model architectures (backbone and multi-task models)
-│   ├── engine.py          # Training and evaluation pipelines
-│   └── utils.py           # Utilities (random seed, checkpointing, etc.)
-├── configs/
-│   ├── pretrain.yaml      # Configuration for the pretraining stage
-│   └── finetune.yaml      # Configuration for downstream training
-├── pretrain.py            # Entry point for pretraining
-├── finetune.py            # Entry point for downstream diagnosis
-├── requirements.txt
-└── README.md
-```
-
----
 
 ### 2. Downstream Diagnosis Training
 
-After pretraining, the corresponding model weights are loaded and fine-tuned for downstream multi-task cardiac diagnosis.
+After pretraining, the learned representations are transferred and fine-tuned for downstream multi-task cardiac disease diagnosis.
 
-```
-.
-├── src/
-│   ├── data.py            # Data loading and dataset definitions
-│   ├── models.py          # Model architectures (backbone and multi-task models)
-│   ├── engine.py          # Training and evaluation pipelines
-│   └── utils.py           # Utilities (random seed, checkpointing, etc.)
-├── configs/
-│   ├── pretrain.yaml      # Configuration for the pretraining stage
-│   └── finetune.yaml      # Configuration for downstream training
-├── pretrain.py            # Entry point for pretraining
-├── finetune.py            # Entry point for downstream diagnosis
-├── requirements.txt
-└── README.md
+```bash
+python finetune.py --config configs/finetune.yaml
 ```
 
-During this stage, selected layers of the pretrained network can be frozen to improve training stability.
+During this stage, selected layers of the pretrained backbone can be frozen to improve training stability and reduce overfitting.
 
 ---
 
@@ -120,7 +95,7 @@ Please refer to `requirements.txt` for the complete dependency list.
 ## Notes
 
 - This codebase is intended for research purposes only.
-- Due to data privacy constraints, the raw datasets are not publicly available.
+- Due to data privacy and ethical constraints, the raw datasets are not publicly available.
 - All reported results are obtained using strictly separated training, validation, and independent test sets.
 
 ---
